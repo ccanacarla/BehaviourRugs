@@ -45,8 +45,8 @@ class AnalysisPipeline:
         print("Step 1: Loading dataset...")
         #df_raw = pd.read_csv("user47_long_trajectories.csv")
 
-        df_raw = pd.read_csv("ex1_synthetic_trajectories.csv")
-        #df_raw = pd.read_csv("128_fishing_trajsRugs.csv")
+        #df_raw = pd.read_csv("ex1_synthetic_trajectories.csv")
+        df_raw = pd.read_csv("128_fishing_trajsRugs10.csv")
         #ids_10 = df_raw["trajectory_id"].unique()[:20]
 
         # --- Filtrar o dataframe ---
@@ -80,7 +80,7 @@ class AnalysisPipeline:
 
         # 5. Cluster Trajectories
         print("\nStep 5: Clustering trajectories using LSH...")
-        clusterer = TrajectoryClusterer(df_symbolic_lists)
+        clusterer = TrajectoryClusterer(k_motif=3, symbolic_df=df_symbolic_lists)
         df_clustered = clusterer.cluster()
         df_clustered.to_csv(self.output_dir / f"{sufixo}_dataset_simbolic.csv", index=False)
         print(f"Saved clustered symbolic dataset to '{self.output_dir}'")
@@ -107,8 +107,19 @@ class AnalysisPipeline:
             print(f"Saved Motif Frequency plot to '{self.output_dir}'")
         else:
             print("No motifs found, skipping frequency plot.")
+
+        # 8. Generate Trajectories Animation
+        print("\nStep 8: Generating Trajectories Animation...")
+        # Note: The df_processed should contain 'timestamp' column for the animation to work correctly
+        if 'timestamp' not in df_processed.columns:
+            print("Warning: 'timestamp' column not found in processed data. Animation may not be correct.")
+            # Add a dummy timestamp if it's missing, assuming uniform time steps
+            df_processed = df_processed.groupby('trajectory_id').apply(lambda g: g.assign(timestamp=range(len(g)))).reset_index(drop=True)
+
+        visualizer.animate_trajectories(df_processed, f"{sufixo}_trajectories_animation.mp4")
         
         print("\nPipeline finished successfully!")
+
 
 if __name__ == "__main__":
     # Configuration for the pipeline
