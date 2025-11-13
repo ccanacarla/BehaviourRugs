@@ -6,7 +6,8 @@ from trajectory_analysis import (
     TrajectoryPreprocessor,
     FeatureExtractor,
     SymbolicConverter,
-    Visualizer
+    Visualizer,
+    VelocityAngleVisualizer
 )
 
 
@@ -72,6 +73,13 @@ class AnalysisPipeline:
         df_features.to_csv(self.output_dir / f"{sufixo}_dataset_metrics.csv", index=False)
         print(f"Saved features dataset and plots to '{self.output_dir}'")
 
+        # 3.5. Visualize Velocity-Angle Rugs
+        print("\nStep 3.5: Generating Velocity-Angle Rugs visualization...")
+        vel_angle_visualizer = VelocityAngleVisualizer(output_dir=self.output_dir)
+        vel_angle_visualizer.plot_velocity_angle_rugs(df_features, f"{sufixo}_VelocityAngleRugs.png")
+        vel_angle_visualizer.plot_legend(f"{sufixo}_VelocityAngleLegend.png")
+        print(f"Saved Velocity-Angle Rugs and Legend plots to '{self.output_dir}'")
+
         # 4. Convert to Symbolic Representation
         print("\nStep 4: Converting features to symbolic representation...")
         symbolic_converter = SymbolicConverter(df_features)
@@ -107,7 +115,7 @@ class AnalysisPipeline:
             print(f"Saved Motif Frequency plot to '{self.output_dir}'")
         else:
             print("No motifs found, skipping frequency plot.")
-
+'''
         # 8. Generate Trajectories Animation
         print("\nStep 8: Generating Trajectories Animation...")
         # Note: The df_processed should contain 'timestamp' column for the animation to work correctly
@@ -119,7 +127,7 @@ class AnalysisPipeline:
         visualizer.animate_trajectories(df_processed, f"{sufixo}_trajectories_animation.mp4")
         
         print("\nPipeline finished successfully!")
-
+'''
 
 if __name__ == "__main__":
     # Configuration for the pipeline

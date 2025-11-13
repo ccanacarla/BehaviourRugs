@@ -15,11 +15,18 @@ class Visualizer:
     def plot_behaviour_rugs(self, symbolic_df, filename="ex1_BehaviourRugs.png"):
         """Creates a 'behaviour rug' plot from symbolic data."""
         direction_rgb = {
+            'Norte': [240/255, 239/255, 48/255],   # #F0EF30
+            'Leste': [240/255, 107/255, 48/255],   #F06B30
+            'Sul': [141/255, 48/255, 240/255],     #8D30F0
+            'Oeste': [48/255, 240/255, 217/255]     # #AA0071
+        }
+        '''
+        direction_rgb = {
             'Norte': [56/255, 159/255, 255/255],   # #389FFF
             'Leste': [139/255, 54/255, 245/255],
             'Sul': [230/255, 38/255, 244/255],
             'Oeste': [54/255, 213/255, 245/255]     # #AA0071
-        }
+        }'''
         speed_factor = {'Parado': 0.01, 'Lento': 0.4, 'Médio': 0.7, 'Rápido': 1.0}
 
         def symbol_to_rgb(symbol):
@@ -45,12 +52,18 @@ class Visualizer:
             image[i] = np.array(colors[:max_len])
 
         plt.figure(figsize=(12, n_traj * 0.3))
-        plt.imshow(image, aspect='auto')
+        plt.imshow(image, aspect='auto', interpolation='nearest')
         
         yticks = np.arange(n_traj)
         ylabels = df_sorted["group"].astype(str) + " (C:" + df_sorted["cluster_id"].astype(str) + ")"
         plt.yticks(yticks, ylabels)
 
+        step = max_len // 10 if max_len > 1000 else 100  # ajuste dinâmico
+        if step < 50:
+            step = 50  # limite inferior
+        xticks = np.arange(0, max_len + 1, 200)
+        plt.xticks(xticks)
+        plt.xticks(rotation=45)
         plt.xlabel("Time (state sequence)")
         plt.ylabel("Trajectories (Group ID & Cluster ID)")
         plt.title("Symbolic Representation of Trajectories")
