@@ -46,8 +46,8 @@ class AnalysisPipeline:
         print("Step 1: Loading dataset...")
         #df_raw = pd.read_csv("user47_long_trajectories.csv")
 
-        #df_raw = pd.read_csv("ex1_synthetic_trajectories.csv")
-        df_raw = pd.read_csv("128_fishing_trajsRugs10.csv")
+        df_raw = pd.read_csv("ex1_synthetic_trajectories.csv")
+        #df_raw = pd.read_csv("128_fishing_trajsRugs10.csv")
         #ids_10 = df_raw["trajectory_id"].unique()[:20]
 
         # --- Filtrar o dataframe ---
