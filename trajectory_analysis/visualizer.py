@@ -20,24 +20,20 @@ class Visualizer:
             'Sul': [141/255, 48/255, 240/255],     #8D30F0
             'Oeste': [48/255, 240/255, 217/255]     # #AA0071
         }
-        '''
-        direction_rgb = {
-            'Norte': [56/255, 159/255, 255/255],   # #389FFF
-            'Leste': [139/255, 54/255, 245/255],
-            'Sul': [230/255, 38/255, 244/255],
-            'Oeste': [54/255, 213/255, 245/255]     # #AA0071
-        }'''
         speed_factor = {'Parado': 0.01, 'Lento': 0.4, 'Médio': 0.7, 'Rápido': 1.0}
 
         def symbol_to_rgb(symbol):
-            if pd.isna(symbol) or symbol == "": return [1.0, 1.0, 1.0]
-            for speed in speed_factor:
+            if pd.isna(symbol) or symbol == "": return [1.0, 1.0, 1.0] # White for NaN/empty
+            if symbol == "Parado":
+                return [0.3, 0.3, 0.3] # Dark grey for stopped state
+            
+            for speed in ["Lento", "Médio", "Rápido"]: # Only iterate through moving speeds
                 if symbol.startswith(speed):
                     direction = symbol[len(speed):]
-                    base_color = direction_rgb.get(direction, [0, 0, 0])
-                    brightness = speed_factor[speed]
+                    base_color = direction_rgb.get(direction, [0, 0, 0]) # Default to black if direction not found
+                    brightness = speed_factor.get(speed, 1.0) # Default to 1.0 if speed not found
                     return np.clip(np.array(base_color) * brightness, 0, 1)
-            return [0, 0, 0]
+            return [0, 0, 0] # Default to black for unknown symbols
 
         max_len = max(len(seq) for seq in symbolic_df["simbolic_movement"])
         n_traj = len(symbolic_df)
@@ -68,13 +64,16 @@ class Visualizer:
         plt.ylabel("Trajectories (Group ID & Cluster ID)")
         plt.title("Symbolic Representation of Trajectories")
 
-        legend_elements = [
-            mpatches.Patch(
-                color=np.clip(np.array(direction_rgb[direction]) * speed_factor[speed], 0, 1),
-                label=f"{speed}{direction}"
-            )
-            for direction in direction_rgb for speed in speed_factor
-        ]
+        legend_elements = []
+        # Add the single "Parado" state
+        legend_elements.append(mpatches.Patch(color=[0.3, 0.3, 0.3], label="Parado"))
+
+        # Add combinations for moving states (3 speeds x 4 directions)
+        for direction in direction_rgb:
+            for speed in ["Lento", "Médio", "Rápido"]: # Only iterate through moving speeds
+                color = np.clip(np.array(direction_rgb[direction]) * speed_factor[speed], 0, 1)
+                legend_elements.append(mpatches.Patch(color=color, label=f"{speed}{direction}"))
+
         plt.legend(handles=legend_elements, bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.tight_layout()
         plt.savefig(self.output_dir / filename, dpi=300, bbox_inches='tight')

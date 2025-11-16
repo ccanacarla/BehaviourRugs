@@ -48,9 +48,18 @@ class SymbolicConverter:
         lists_df = self.df.groupby("trajectory_id", as_index=False).apply(make_lists)
         lists_df = lists_df.rename(columns={"trajectory_id": "group"})
 
+        def combine_symbols(speed, direction):
+            if pd.isna(speed):
+                return ""
+            if speed == "Parado":
+                return "Parado"
+            if pd.isna(direction):
+                return ""
+            return str(speed) + str(direction)
+
         lists_df["simbolic_movement"] = lists_df.apply(
             lambda row: [
-                str(s) + str(d) if not (pd.isna(s) or pd.isna(d)) else ""
+                combine_symbols(s, d)
                 for s, d in zip(row["speed_list"], row["direction_list"])
             ],
             axis=1

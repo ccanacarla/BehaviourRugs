@@ -19,6 +19,14 @@ class TrajectoryPreprocessor:
         Xc = X - np.mean(X, axis=0)
         _, _, Vt = np.linalg.svd(Xc, full_matrices=False)
         v1 = Vt[0]
+
+        # Resolve ambiguity: ensure the eigenvector points in the same
+        # general direction as the trajectory's displacement.
+        # The trajectory is already translated to start at (0,0).
+        displacement_vector = np.array([x[-1], y[-1]])
+        if np.dot(v1, displacement_vector) < 0:
+            v1 = -v1
+
         theta = np.arctan2(v1[1], v1[0])
         return theta, np.mean(X, axis=0), v1
 
