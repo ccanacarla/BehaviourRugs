@@ -79,7 +79,7 @@ class Visualizer:
         plt.savefig(self.output_dir / filename, dpi=300, bbox_inches='tight')
         plt.close()
 
-    def plot_motif_frequency(self, motif_df, filename="motif_frequency.png"):
+    def plot_motif_frequency(self, motif_df, filename="motif_frequency.png", ylabel="Trajectories"):
         """
         Plots the motif frequency vectors for each trajectory as a heatmap.
 
@@ -88,6 +88,7 @@ class Visualizer:
                                      columns are motifs, with values representing
                                      the frequency of each motif.
             filename (str): The name of the file to save the plot.
+            ylabel (str): The label for the y-axis.
         """
         plt.figure(figsize=(len(motif_df.columns)*0.3, 10))
         plt.imshow(motif_df, cmap='viridis', aspect='auto')
@@ -95,7 +96,7 @@ class Visualizer:
         plt.colorbar(label='Motif Frequency')
         plt.title('Motif Frequency per Trajectory')
         plt.xlabel('Motifs')
-        plt.ylabel('Trajectories')
+        plt.ylabel(ylabel)
         
         plt.xticks(ticks=np.arange(len(motif_df.columns)), labels=motif_df.columns, rotation=90)
         plt.yticks(ticks=np.arange(len(motif_df.index)), labels=motif_df.index)

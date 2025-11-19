@@ -10,7 +10,7 @@ from matplotlib.colors import hsv_to_rgb
 class TrajectoryClusterer:
     """Clusters trajectories based on symbolic movement motifs."""
 
-    def __init__(self, symbolic_df, k_motif=2, lsh_threshold=0.2, num_perm=256):
+    def __init__(self, symbolic_df, k_motif=2, lsh_threshold=0.2, num_perm=128):
         self.symbolic_df = symbolic_df.copy()
         self.k = k_motif
         self.lsh_threshold = lsh_threshold

@@ -67,35 +67,74 @@ class TrajectoryPreprocessor:
         return self.df
 
     def plot_comparison(self, filename="ex1_Comparacao_Original_Rotacionado_PCA.png"):
-        """Plots original vs. rotated trajectories."""
-        unique_tracker_ids = self.df["trajectory_id"].unique()
+        """Plots original vs. rotated trajectories, grouped by trajectory_id."""
+
         fig, axes = plt.subplots(1, 2, figsize=(18, 8))
 
-        # Panel 1: Original (Translated) + PCA Directions
+        # --- AGRUPA POR TRAJECTORY_ID UMA ÚNICA VEZ ---
+        grouped = self.df.groupby("trajectory_id")
+        traj_ids = list(grouped.groups.keys())
+
+        # Paleta de cores consistente para os dois painéis
+        colors = plt.cm.tab20(np.linspace(0, 1, len(traj_ids)))
+        color_map = {tid: c for tid, c in zip(traj_ids, colors)}
+
+        # -------- Painel 1: Espaço original (transladado) + direções PCA --------
         ax = axes[0]
-        for id_tracker in unique_tracker_ids:
-            data_id = self.df[self.df["trajectory_id"] == id_tracker]
-            ax.plot(data_id["x_translate"], data_id["y_translate"], label=f"Traj {id_tracker}")
-            center = np.array(self.pca_directions[id_tracker]['center'])
-            v1 = np.array(self.pca_directions[id_tracker]['vector'])
-            scale = np.max(np.abs(data_id[['x_translate', 'y_translate']].to_numpy())) * 0.5
-            line_x = [center[0] - v1[0]*scale, center[0] + v1[0]*scale]
-            line_y = [center[1] - v1[1]*scale, center[1] + v1[1]*scale]
-            ax.plot(line_x, line_y, '--', color='gray', linewidth=1, alpha=0.6)
-        
+
+        for traj_id, data_id in grouped:
+            data_id = data_id.sort_values("timestamp")
+            color = color_map[traj_id]
+
+            # Trajetória original
+            ax.plot(
+                data_id["x_translate"],
+                data_id["y_translate"],
+                label=f"Traj {traj_id}",
+                color=color,
+                linewidth=2,
+                alpha=0.9
+            )
+
+            # Direção PCA (se existir)
+            if traj_id in self.pca_directions:
+                center = np.array(self.pca_directions[traj_id]['center'])
+                v1 = np.array(self.pca_directions[traj_id]['vector'])
+
+                scale = np.max(
+                    np.abs(
+                        data_id[["x_translate", "y_translate"]].to_numpy()
+                    )
+                ) * 0.5
+
+                line_x = [center[0] - v1[0]*scale, center[0] + v1[0]*scale]
+                line_y = [center[1] - v1[1]*scale, center[1] + v1[1]*scale]
+
+                ax.plot(line_x, line_y, '--', color='gray', linewidth=1, alpha=0.6)
+
         ax.set_title("Original Space (Translated) + PCA Directions")
         ax.set_xlabel("X (translated)")
         ax.set_ylabel("Y (translated)")
-        ax.legend(fontsize=8)
         ax.axis('equal')
         ax.grid(True, linestyle=':', alpha=0.5)
+        ax.legend(fontsize=8)
 
-        # Panel 2: Rotated Trajectories
+        # -------- Painel 2: Trajetórias rotacionadas --------
         ax = axes[1]
-        for id_tracker in unique_tracker_ids:
-            data_id = self.df[self.df["trajectory_id"] == id_tracker]
-            ax.plot(data_id["x_rotated"], data_id["y_rotated"], label=f"Traj {id_tracker}")
-        
+
+        for traj_id, data_id in grouped:
+            data_id = data_id.sort_values("timestamp")
+            color = color_map[traj_id]
+
+            ax.plot(
+                data_id["x_rotated"],
+                data_id["y_rotated"],
+                label=f"Traj {traj_id}",
+                color=color,
+                linewidth=2,
+                alpha=0.9
+            )
+
         ax.set_title("Rotated Space (Aligned to X-axis)")
         ax.set_xlabel("X Rotated")
         ax.set_ylabel("Y Rotated")
