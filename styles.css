@@ -2836,3 +2836,280 @@ html, body {
 .percentile-settings-panel .percentile-cutoff-cell>input[hidden] {
   display: none !important;
 }
+
+/* ===========================================================
+   Collapsible processing settings — compact header + overlay
+   Does not change grid sizing, panel heights or existing IDs.
+   =========================================================== */
+#dataset-controls {
+  position: relative;
+  overflow: visible;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-height: 36px;
+  height: 36px;
+  padding: 3px 8px;
+  gap: 8px;
+  z-index: 10000;
+}
+
+#dataset-controls #dataset-menu-toggle {
+  flex: 0 0 27px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid #c7d2de;
+  border-radius: 4px;
+  color: #164773;
+  background: #ffffff;
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+}
+#dataset-controls #dataset-menu-toggle:hover,
+#dataset-controls #dataset-menu-toggle[aria-expanded="true"] {
+  background: #e7f0f8;
+}
+#dataset-controls #dataset-menu-toggle:focus-visible {
+  outline: 2px solid #164773;
+  outline-offset: 2px;
+}
+#dataset-controls .app-brand { margin-right: 0; }
+
+#dataset-controls .dataset-settings-popover {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  box-sizing: border-box;
+  width: min(440px, calc(100vw - 16px));
+  max-height: calc(100dvh - 65px);
+  overflow-y: auto;
+  padding: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 11px;
+  background: #f8fafc;
+  border: 1px solid #b9c6d5;
+  border-radius: 7px;
+  box-shadow: 0 8px 24px rgba(20, 43, 66, .21);
+  color: #253447;
+  z-index: 10001;
+}
+#dataset-controls .dataset-settings-popover[hidden] { display: none !important; }
+#dataset-controls .dataset-settings-heading {
+  font-size: 13px;
+  font-weight: 700;
+}
+#dataset-controls .dataset-settings-popover .dataset-name {
+  display: block;
+  max-width: 100%;
+  font-size: 11px;
+}
+#dataset-controls .dataset-settings-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 70px;
+  gap: 9px 12px;
+  align-items: center;
+}
+#dataset-controls .dataset-settings-fields label { font-size: 12px; }
+#dataset-controls .dataset-settings-fields input[type="number"] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+}
+#dataset-controls .dataset-settings-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+#dataset-controls .dataset-settings-footer #dataset-status {
+  flex: 1 1 150px;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+#dataset-controls .dataset-settings-popover #percentile-settings-toggle {
+  align-self: flex-start;
+  max-width: 100%;
+  white-space: normal;
+}
+
+
+/* Inline Speed classification section inside the processing menu.
+   Keeps the existing processing header height and all panel dimensions. */
+#dataset-controls .speed-classification {
+  width: 100%;
+  min-width: 0;
+  border-top: 1px solid #dbe3eb;
+  border-bottom: 1px solid #dbe3eb;
+}
+#dataset-controls .speed-classification-toggle {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 2px;
+  width: 100%;
+  min-height: 45px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: #253447;
+  cursor: pointer;
+}
+#dataset-controls .speed-classification-toggle:hover,
+#dataset-controls .speed-classification-toggle[aria-expanded="true"] {
+  background: #edf3f8;
+}
+#dataset-controls .speed-classification-toggle:focus-visible {
+  outline: 2px solid #164773;
+  outline-offset: -2px;
+}
+#dataset-controls .speed-classification-toggle-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+#dataset-controls .speed-classification-toggle-copy strong {font-size: 12px;}
+#dataset-controls .speed-classification-toggle-copy small {
+  font-size: 11px;
+  color: #63778c;
+  overflow-wrap: anywhere;
+}
+#dataset-controls .speed-classification-chevron {font-size: 18px; color: #63778c;}
+#dataset-controls .speed-classification-content {
+  box-sizing: border-box;
+  padding: 4px 2px 12px;
+  min-width: 0;
+  max-height: min(54dvh, 450px);
+  overflow-y: auto;
+}
+#dataset-controls .speed-classification-content[hidden] {display: none !important;}
+#dataset-controls .speed-classification-help {
+  margin: 3px 0 10px;
+  font: 11px/1.45 Arial, sans-serif;
+  color: #526478;
+}
+#dataset-controls .speed-classification-modes {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 11px;
+}
+#dataset-controls .speed-classification-modes label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 11px;
+}
+#dataset-controls .speed-classification-modes input[type="radio"] {
+  margin: 0;
+  width: auto;
+  height: auto;
+  accent-color: #164773;
+}
+#dataset-controls .speed-classification-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 7px 10px;
+  align-items: center;
+}
+#dataset-controls .speed-classification-grid > strong {
+  font-size: 11px;
+  color: #253447;
+}
+#dataset-controls .speed-classification-cutoff {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+#dataset-controls .speed-classification-cutoff > span {
+  min-width: 14px;
+  color: #526478;
+  font-size: 11px;
+}
+#dataset-controls .speed-classification-grid input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 27px;
+  padding: 4px 6px;
+  background: #fff;
+  color: #253447;
+  border: 1px solid #bbc5d1;
+  border-radius: 4px;
+  font: 11px Arial, sans-serif;
+}
+#dataset-controls .speed-classification-cutoff input { flex: 1 1 auto; width: 0; }
+#dataset-controls .speed-classification-cutoff input[hidden] {display:none !important;}
+#dataset-controls .speed-classification-last {
+  color: #63778c;
+  font-size: 11px;
+}
+#dataset-controls .speed-classification-error {
+  margin-top: 6px;
+  color: #ab2525;
+  line-height: 1.35;
+  font-size: 11px;
+}
+#dataset-controls .speed-classification-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 10px;
+}
+#dataset-controls .speed-classification-actions button {
+  padding: 5px 9px;
+  background: #164773;
+  color: #fff;
+  border: 1px solid #164773;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+#dataset-controls .speed-classification-actions .speed-classification-reset {
+  background: #e7edf4;
+  border-color: #c7d2de;
+  color: #253447;
+}
+#dataset-controls .speed-classification-actions button:disabled {opacity:.5;cursor:wait;}
+
+/* Menu hambúrguer: apenas os três tracinhos */
+#dataset-menu-toggle {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 4px 6px !important;
+    color: #333;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* Sem fundo ao passar o mouse ou clicar */
+#dataset-menu-toggle:hover,
+#dataset-menu-toggle:active {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Foco visível para navegação por teclado */
+#dataset-menu-toggle:focus-visible {
+    outline: 2px solid #2774b5;
+    outline-offset: 2px;
+}
