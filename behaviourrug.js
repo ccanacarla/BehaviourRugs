@@ -254,8 +254,9 @@ smoothingCols.forEach(key => {
     }
   });
 
+  
   // Context Builder shares the control bar, but has independent state.
-  createContextBuilder(controlsDiv, { trajectories: data });
+  //createContextBuilder(controlsDiv, { trajectories: data });
 
   // Interaction Mode Button
   controlsDiv.append("button")
@@ -286,6 +287,7 @@ smoothingCols.forEach(key => {
 
       console.log(`Interaction Mode: ${interactionMode ? "ON" : "OFF"}`);
     });
+
 
   // ==================================================
   // 3) Estrutura painéis

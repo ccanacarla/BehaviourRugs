@@ -16,7 +16,7 @@ export function initUploadControls(onSubmit) {
   bar.innerHTML = `
     <button id="dataset-menu-toggle" type="button" aria-label="Open processing settings"
             aria-controls="dataset-settings-popover" aria-expanded="false" title="Processing settings">☰</button>
-    <strong class="app-brand">BehaviourRug</strong>
+    <strong class="app-brand">BehaviourViews</strong>
     <div id="dataset-settings-popover" class="dataset-settings-popover" hidden>
       <span class="dataset-settings-heading">Processing settings</span>
       <span class="dataset-name" title="Dataset loaded automatically">visem_all_trajectory.csv</span>
